@@ -18,7 +18,8 @@ public class UserController {
 
     //Criar usuario
     @PostMapping("/novouser")
-    private ResponseEntity<?> criar(@RequestBody UserModel userModel) {
+    public ResponseEntity<?> criar(@RequestBody UserModel userModel, HttpServletRequest request) {
+
         Optional<UserModel> usuarioExistente = userRepository.findByUsername(userModel.getUsername());
 
         if (usuarioExistente.isPresent()) {

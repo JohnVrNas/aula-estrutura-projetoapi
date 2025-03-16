@@ -62,3 +62,22 @@ public class FilmesController {
         }).orElse(ResponseEntity.notFound().build());
     }
 }
+
+
+//User
+//{
+//    "nome":"Joao Rodrigues",
+//    "username":"john",
+//    "senha":"123456",
+//    "telefone":"505",
+//    "email":"joao@gmail.com"
+//}
+//
+//Filme
+//{
+//    "titulo":"Interestellar",
+//    "data":"14/03/2025",
+//    "comentarios":"Melhor filme da minha vida!",
+//    "nota":"5.0",
+//    "gostou":"Sim"
+//}
