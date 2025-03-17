@@ -1,5 +1,6 @@
 package com.aula.joaoJava.User;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,10 +27,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário já existe!");
         }
 
+        var hashsenha = BCrypt.withDefaults().hashToString(12, userModel.getSenha().toCharArray());
+        userModel.setSenha(hashsenha);
+
         UserModel criado = userRepository.save(userModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(criado);
     }
-
 
     //  Listar usuario
     @GetMapping("/usercadastrados")
