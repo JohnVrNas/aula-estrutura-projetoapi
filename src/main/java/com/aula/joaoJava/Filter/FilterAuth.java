@@ -1,4 +1,4 @@
-package Filter;
+package com.aula.joaoJava.Filter;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.aula.joaoJava.User.IUserRepository;
