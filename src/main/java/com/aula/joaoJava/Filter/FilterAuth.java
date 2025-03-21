@@ -25,8 +25,8 @@ public class FilterAuth extends OncePerRequestFilter {
               var authorization = request.getHeader("Authorization");
               System.out.println(authorization);
 
-              var authEncode = authorization.substring("Basic".length());
-              System.out.println("Authorization");
+              var authEncode = authorization.substring("Basic".length()).trim();
+              System.out.println(authEncode);
 
               byte[] authDecode = Base64.getDecoder().decode(authEncode);
               System.out.println(authDecode);
