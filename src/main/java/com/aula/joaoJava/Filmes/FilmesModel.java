@@ -1,5 +1,6 @@
 package com.aula.joaoJava.Filmes;
 
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 
@@ -20,7 +21,7 @@ public class FilmesModel {
     private String data; //  usar Date? precisa de import
     private String comentarios;
     private float nota;
-    private String gostou; //  usar boolean?
+    private boolean gostou; //  usar boolean?
 
 
     public UUID getId() {
@@ -31,11 +32,11 @@ public class FilmesModel {
         this.id = id;
     }
 
-    public String getGostou() {
+    public boolean getGostou() {
         return gostou;
     }
 
-    public void setGostou(String gostou) {
+    public void setGostou(boolean gostou) {
         this.gostou = gostou;
     }
 
