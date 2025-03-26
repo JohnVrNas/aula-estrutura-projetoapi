@@ -80,5 +80,5 @@ public class FilmesController {
 //    "data":"14/03/2025",
 //    "comentarios":"Melhor filme da minha vida!",
 //    "nota":"5.0",
-//    "gostou":"Sim"
+//    "gostou": true
 //}

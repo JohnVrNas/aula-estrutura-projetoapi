@@ -23,6 +23,7 @@ public class FilterAuth extends OncePerRequestFilter {
           throws ServletException, IOException {
 
               var authorization = request.getHeader("Authorization");
+              filterChain.doFilter(request, response);
               System.out.println(authorization);
 
               var authEncode = authorization.substring("Basic".length()).trim();
@@ -33,7 +34,7 @@ public class FilterAuth extends OncePerRequestFilter {
 
               var authString = new String(authDecode);
               System.out.println(authString);
-              String [] credenciais = authString.split("");
+              String [] credenciais = authString.split(":");
 
               String username = credenciais[0];
               String senha = credenciais[1];
