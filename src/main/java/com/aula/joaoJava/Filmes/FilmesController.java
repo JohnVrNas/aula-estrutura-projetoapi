@@ -1,12 +1,13 @@
 package com.aula.joaoJava.Filmes;
-import com.aula.joaoJava.User.IUserRepository;
-import com.aula.joaoJava.User.UserModel;
-import jakarta.servlet.http.HttpServletRequest;
+
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,49 +19,62 @@ public class FilmesController {
     @Autowired
     private IFilmesRepository filmesRepository;
 
-//  Criar filme
+    //  Criar filme
     @PostMapping("/criarfilme")
     private ResponseEntity<?> criarfilme(@RequestBody FilmesModel filmesModel) {
-    Optional<FilmesModel> filmeExis = filmesRepository.findByTitulo(filmesModel.getTitulo());
+        Optional<FilmesModel> filmeExis = filmesRepository.findByTitulo(filmesModel.getTitulo());
 
-    if (filmeExis.isPresent()) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Filme já existe na lista!");
+        if (filmeExis.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Filme já existe na lista!");
+        }
+
+        FilmesModel criado = filmesRepository.save(filmesModel);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.of("message", "Filme criado com sucesso!", "filme", criado));
     }
 
-    FilmesModel criado = filmesRepository.save(filmesModel);
-
-    return ResponseEntity.status(HttpStatus.CREATED).body(criado);
-}
-
-//  Listar filme
+    //  Listar filme
     @GetMapping("/listafilme")
-    public List<FilmesModel> listarFilmes(){
+    public List<FilmesModel> listarFilmes() {
         List<FilmesModel> cadasfilm = filmesRepository.findAll();
         return cadasfilm;
     }
 
-    //Deletar filme
+    //  Deletar filme
     @DeleteMapping("/deletarfilme/{id}")
-    public void deleteFilme(@PathVariable UUID id){
+    public ResponseEntity<?> deleteFilme(@PathVariable UUID id) {
+        if (!filmesRepository.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Filme não encontrado!");
+        }
         filmesRepository.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    //Atualizar Filme
+
+//  Atualiza Filme
     @PutMapping("/atualizarfilme/{id}")
-    public ResponseEntity atualizaFilme(@PathVariable UUID id, @RequestBody FilmesModel filmeModel) {
-        return filmesRepository.findById(id).map(filmeExis -> {
-            // Atualiza apenas os campos permitidos
+    @Transactional
+    public ResponseEntity<?> atualizaFilme(@PathVariable UUID id, @RequestBody FilmesModel filmeModel) {
+        Optional<FilmesModel> filmeExistente = filmesRepository.findById(id);
+
+        if (filmeExistente.isPresent()) {
+            FilmesModel filmeExis = filmeExistente.get();
+
             filmeExis.setTitulo(filmeModel.getTitulo());
             filmeExis.setData(filmeModel.getData());
             filmeExis.setComentarios(filmeModel.getComentarios());
             filmeExis.setNota(filmeModel.getNota());
             filmeExis.setGostou(filmeModel.getGostou());
 
-            var atualizado = filmesRepository.save(filmeExis);
-            return ResponseEntity.ok(atualizado);
-        }).orElse(ResponseEntity.notFound().build());
+            filmesRepository.save(filmeExis);
+            return ResponseEntity.ok(filmeExis);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Filme não encontrado!");
+        }
     }
 }
+
 
 
 //User
