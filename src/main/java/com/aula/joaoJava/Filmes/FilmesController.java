@@ -1,5 +1,7 @@
 package com.aula.joaoJava.Filmes;
 
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/filmes")//localhost:8080/filmes
-
 public class FilmesController {
 
     @Autowired
@@ -21,7 +22,7 @@ public class FilmesController {
 
     //  Criar filme
     @PostMapping("/criarfilme")
-    private ResponseEntity<?> criarfilme(@RequestBody FilmesModel filmesModel) {
+    public ResponseEntity<?> criarfilme(@RequestBody FilmesModel filmesModel, HttpServletRequest request) {
         Optional<FilmesModel> filmeExis = filmesRepository.findByTitulo(filmesModel.getTitulo());
 
         if (filmeExis.isPresent()) {
