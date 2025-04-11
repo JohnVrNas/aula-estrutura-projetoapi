@@ -17,7 +17,7 @@ O projeto foi feito usando a metodologia Kanban.
 
 ## 📁 Endpoints
 
-## Filme
+# Filme
 
 ### ➕ Criar um Filme
 
@@ -94,7 +94,7 @@ id (UUID): Identificador único do filme.
 - *404 Not Found – Filme não encontrado.*
 
 
-## Usuario
+# Usuario
 
 ### ➕ Criar um Usuario
 
