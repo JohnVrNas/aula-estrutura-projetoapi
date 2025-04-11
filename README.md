@@ -175,6 +175,7 @@ id (UUID): Identificador único do user.
 
 ## 📌 Autor
 **João Victor Rodrigues do Nascimento - RGM: 11232101507**
+
 **Wellingto de Castro - RGM: 11232101354**
 
 
