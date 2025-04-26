@@ -1,14 +1,10 @@
 package com.aula.joaoJava.Filmes;
 
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
-
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
-
-import jakarta.persistence.GeneratedValue;
+import java.util.UUID;
 
 @Entity(name = "tb_filmes")
 public class FilmesModel {

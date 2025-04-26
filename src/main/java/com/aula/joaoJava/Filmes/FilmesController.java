@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.aula.joaoJava.Filmes.FilmesModel;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class FilmesController {
     //  Criar filme
     @PostMapping("/criarfilme")
     private ResponseEntity<?> criarfilme(@RequestBody FilmesModel filmesModel) {
-        Optional<FilmesModel> filmeExis = filmesRepository.findByTitulo(filmesModel.getTitulo());
+        Optional<com.aula.joaoJava.Filmes.FilmesModel> filmeExis = filmesRepository.findByTitulo(filmesModel.getTitulo());
 
         if (filmeExis.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Filme já existe na lista!");
