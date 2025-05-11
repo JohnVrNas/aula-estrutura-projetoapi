@@ -18,43 +18,56 @@ public class FilterAuth extends OncePerRequestFilter {
     IUserRepository userRepository;
 
     @Override
-    protected void doFilterInternal (HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-          throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-              var authorization = request.getHeader("Authorization");
-              filterChain.doFilter(request, response);
-              System.out.println(authorization);
 
-              var authEncode = authorization.substring("Basic".length()).trim();
-              System.out.println(authEncode);
+        String path = request.getRequestURI();
 
-              byte[] authDecode = Base64.getDecoder().decode(authEncode);
-              System.out.println(authDecode);
-
-              var authString = new String(authDecode);
-              System.out.println(authString);
-              String [] credenciais = authString.split(":");
-
-              String username = credenciais[0];
-              String senha = credenciais[1];
-
-              System.out.println(username);
-              System.out.println(senha);
-
-    //        Validação  de usuario
-              var user = userRepository.findByUsername(username);
-              if(user == null){
-                  response.sendError(401, "Usuário sem autorização");
-              }else{
-                  var verificaSenha = BCrypt.verifyer().verify(senha.toCharArray(), user.get().getSenha());
-                  if(verificaSenha.verified){
-                      filterChain.doFilter(request, response);
-                  }else{
-                      response.sendError(401);
-                  }
-              }
-
+        // Ignora autenticação para rotas públicas
+        if (path.startsWith("/h2-console")
+                || path.equals("/user/novouser")
+                || path.equals("/filmes/criarfilme")) {
+            filterChain.doFilter(request, response);
+            return;
         }
+
+        var authorization = request.getHeader("Authorization");
+
+        // Verifica se o cabeçalho existe e começa com "Basic"
+        if (authorization == null || !authorization.startsWith("Basic ")) {
+            response.sendError(401, "Cabeçalho de autorização ausente ou inválido");
+            return;
+        }
+
+        try {
+            var authEncode = authorization.substring("Basic".length()).trim();
+            byte[] authDecode = Base64.getDecoder().decode(authEncode);
+            var authString = new String(authDecode);
+            String[] credenciais = authString.split(":");
+
+            String username = credenciais[0];
+            String senha = credenciais[1];
+
+            var user = userRepository.findByUsername(username);
+
+            if (user.isEmpty()) {
+                response.sendError(401, "Usuário sem autorização");
+                return;
+            }
+
+            var verificaSenha = BCrypt.verifyer().verify(senha.toCharArray(), user.get().getSenha());
+            if (!verificaSenha.verified) {
+                response.sendError(401, "Senha incorreta");
+                return;
+            }
+
+            // Se passou por tudo, segue com a requisição
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            response.sendError(500, "Erro ao processar autenticação");
+        }
+    }
     }
 
 

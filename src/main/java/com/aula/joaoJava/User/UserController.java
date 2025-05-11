@@ -36,7 +36,7 @@ public class UserController {
 
     //  Listar usuario
     @GetMapping("/usercadastrados")
-    public List<UserModel> listarCursos(){
+    public List<UserModel> listarCursos() {
         List<UserModel> usuariocad = userRepository.findAll();
         return usuariocad;
     }
